@@ -1,6 +1,6 @@
 package mock
 
-import models "homepage-mock-api/internal/model"
+import "homepage-mock-api/internal/models"
 
 func BuildHomeResponse() models.HomeResponse {
 	return models.HomeResponse{
@@ -57,10 +57,10 @@ func BuildHomeResponse() models.HomeResponse {
 			},
 		},
 
-		TodayTasks: models.TodayTasksSection{
+		TodayExercise: models.TodayExerciesSection{
 			Title:    "تمرین‌های درخواستی درمانگران",
 			Subtitle: "حتما تا قبل جلسه بعدی انجام شوند",
-			Tasks: []models.TodayTask{
+			Exercise: []models.TodayExercies{
 				{
 					AssignmentID:    "asn_11228",
 					ExerciseID:      "exc_2001",
