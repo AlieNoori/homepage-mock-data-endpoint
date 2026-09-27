@@ -1,6 +1,10 @@
 package services
 
-import "homepage-mock-api/internal/models"
+import (
+	"sync"
+
+	"homepage-mock-api/internal/models"
+)
 
 type HomeService struct {
 	users     *UserService
@@ -27,15 +31,63 @@ func NewHomeService() *HomeService {
 }
 
 func (s *HomeService) Build(clientID string) models.HomeResponse {
-	return models.HomeResponse{
-		User:              s.users.GetHomeUser(clientID),
-		StreakCalendar:    s.streaks.GetStreakCalendar(clientID),
-		MoodCheckIn:       s.moods.GetMoodCheckIn(clientID),
-		ActivePrograms:    s.programs.GetActivePrograms(clientID),
-		TodayExercise:     s.exercises.GetTodayExercises(clientID),
-		SuggestedExercise: s.exercises.GetSuggestedExercise(clientID),
-		WellbeingSummary:  s.wellbeing.GetWellbeingSummary(clientID),
-		MonthlyOverview:   s.monthly.GetMonthlyOverview(clientID),
-		Recommended:       s.content.GetRecommended(clientID),
-	}
+	var resp models.HomeResponse
+
+	var wg sync.WaitGroup
+
+	wg.Add(1)
+	go func() {
+		defer wg.Done()
+		resp.User = s.users.GetHomeUser(clientID)
+	}()
+
+	wg.Add(1)
+	go func() {
+		defer wg.Done()
+		resp.StreakCalendar = s.streaks.GetStreakCalendar(clientID)
+	}()
+
+	wg.Add(1)
+	go func() {
+		defer wg.Done()
+		resp.MoodCheckIn = s.moods.GetMoodCheckIn(clientID)
+	}()
+
+	wg.Add(1)
+	go func() {
+		defer wg.Done()
+		resp.ActivePrograms = s.programs.GetActivePrograms(clientID)
+	}()
+
+	wg.Add(1)
+	go func() {
+		defer wg.Done()
+		resp.TodayExercise = s.exercises.GetTodayExercises(clientID)
+	}()
+
+	wg.Add(1)
+	go func() {
+		defer wg.Done()
+		resp.SuggestedExercise = s.exercises.GetSuggestedExercise(clientID)
+	}()
+
+	wg.Add(1)
+	go func() {
+		defer wg.Done()
+		resp.WellbeingSummary = s.wellbeing.GetWellbeingSummary(clientID)
+	}()
+
+	wg.Add(1)
+	go func() {
+		defer wg.Done()
+		resp.MonthlyOverview = s.monthly.GetMonthlyOverview(clientID)
+	}()
+
+	wg.Add(1)
+	go func() {
+		defer wg.Done()
+		resp.Recommended = s.content.GetRecommended(clientID)
+	}()
+
+	return resp
 }
